@@ -35,9 +35,7 @@ function App() {
         body: JSON.stringify({ name, country, industry }),
       });
 
-      if (!response.ok) {
-        throw new Error("Assessment failed");
-      }
+      if (!response.ok) throw new Error("Assessment failed");
 
       const data = await response.json();
       setRiskProfile(data);
@@ -50,9 +48,51 @@ function App() {
 
   return (
     <div>
-      <h1>Supplier Risk Assessment</h1>
+      <header
+        style={{
+          marginBottom: "48px",
+          borderBottom: "1px solid var(--border)",
+          paddingBottom: "24px",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "IBM Plex Mono, monospace",
+            fontSize: "11px",
+            color: "var(--accent)",
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            marginBottom: "8px",
+          }}
+        >
+          Supply Chain Intelligence
+        </p>
+        <h1
+          style={{
+            fontSize: "28px",
+            fontWeight: 500,
+            letterSpacing: "-0.02em",
+          }}
+        >
+          Supplier Risk Assessment
+        </h1>
+      </header>
+
       <SupplierForm onSubmit={handleSubmit} isLoading={isLoading} />
-      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      {error && (
+        <p
+          style={{
+            color: "var(--risk-high)",
+            fontFamily: "IBM Plex Mono, monospace",
+            fontSize: "13px",
+            marginTop: "24px",
+          }}
+        >
+          {error}
+        </p>
+      )}
+
       {riskProfile && <RiskProfile data={riskProfile} />}
     </div>
   );
