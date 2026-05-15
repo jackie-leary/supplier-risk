@@ -16,42 +16,168 @@ interface Props {
   data: RiskProfileData;
 }
 
-const riskColors = {
-  Low: "#2e7d32",
-  Medium: "#f57c00",
-  High: "#c62828",
+const riskConfig = {
+  Low: { color: "var(--risk-low)", label: "LOW RISK" },
+  Medium: { color: "var(--risk-medium)", label: "MEDIUM RISK" },
+  High: { color: "var(--risk-high)", label: "HIGH RISK" },
+};
+
+const categoryIcons: Record<string, string> = {
+  geopolitical: "GEOPOLITICAL",
+  environmental: "ENVIRONMENTAL",
+  labor: "LABOR",
+  regulatory: "REGULATORY",
 };
 
 function RiskProfile({ data }: Props) {
-  return (
-    <div>
-      <h2>Risk Assessment Result</h2>
+  const { color, label } = riskConfig[data.overallRisk];
 
-      <div style={{ color: riskColors[data.overallRisk] }}>
-        <strong>Overall Risk: {data.overallRisk}</strong>
+  return (
+    <div style={{ marginTop: "48px", animation: "fadeIn 0.4s ease" }}>
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      {/* Overall risk banner */}
+      <div
+        style={{
+          border: `1px solid ${color}`,
+          padding: "20px 24px",
+          marginBottom: "32px",
+          display: "flex",
+          alignItems: "center",
+          gap: "16px",
+        }}
+      >
+        <div
+          style={{
+            width: "10px",
+            height: "10px",
+            borderRadius: "50%",
+            background: color,
+            flexShrink: 0,
+          }}
+        />
+        <span
+          style={{
+            fontFamily: "IBM Plex Mono, monospace",
+            fontSize: "13px",
+            letterSpacing: "0.15em",
+            color,
+          }}
+        >
+          {label}
+        </span>
+        <span
+          style={{
+            color: "var(--text-muted)",
+            fontSize: "13px",
+            marginLeft: "auto",
+          }}
+        >
+          {data.summary}
+        </span>
       </div>
 
-      <p>{data.summary}</p>
+      {/* Categories */}
+      <div style={{ marginBottom: "32px" }}>
+        <p
+          style={{
+            fontFamily: "IBM Plex Mono, monospace",
+            fontSize: "11px",
+            letterSpacing: "0.1em",
+            color: "var(--text-muted)",
+            textTransform: "uppercase",
+            marginBottom: "16px",
+          }}
+        >
+          Risk Categories
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
+          {Object.entries(data.categories).map(([key, value]) => (
+            <div
+              key={key}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "80px 1fr",
+                gap: "32px",
+                background: "var(--surface)",
+                padding: "16px",
+                alignItems: "start",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "IBM Plex Mono, monospace",
+                  fontSize: "11px",
+                  letterSpacing: "0.1em",
+                  color: "var(--accent)",
+                  paddingTop: "2px",
+                }}
+              >
+                {categoryIcons[key]}
+              </span>
+              <span
+                style={{
+                  fontSize: "13px",
+                  lineHeight: "1.6",
+                  color: "var(--text)",
+                }}
+              >
+                {value}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
 
-      <h3>Categories</h3>
-      <ul>
-        {Object.entries(data.categories).map(([key, value]) => (
-          <li key={key}>
-            <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
-            {value}
-          </li>
-        ))}
-      </ul>
-
+      {/* Red flags */}
       {data.redFlags.length > 0 && (
-        <>
-          <h3>Red Flags</h3>
-          <ul>
+        <div>
+          <p
+            style={{
+              fontFamily: "IBM Plex Mono, monospace",
+              fontSize: "11px",
+              letterSpacing: "0.1em",
+              color: "var(--text-muted)",
+              textTransform: "uppercase",
+              marginBottom: "16px",
+            }}
+          >
+            Red Flags
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
             {data.redFlags.map((flag, i) => (
-              <li key={i}>{flag}</li>
+              <div
+                key={i}
+                style={{
+                  background: "var(--surface)",
+                  padding: "12px 16px",
+                  display: "flex",
+                  gap: "12px",
+                  alignItems: "start",
+                }}
+              >
+                <span
+                  style={{
+                    color: "var(--risk-high)",
+                    fontFamily: "IBM Plex Mono, monospace",
+                    fontSize: "11px",
+                    paddingTop: "2px",
+                  }}
+                >
+                  !
+                </span>
+                <span style={{ fontSize: "13px", lineHeight: "1.6" }}>
+                  {flag}
+                </span>
+              </div>
             ))}
-          </ul>
-        </>
+          </div>
+        </div>
       )}
     </div>
   );
