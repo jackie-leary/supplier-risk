@@ -11,7 +11,7 @@ export interface SupplierInput {
 }
 
 export interface RiskProfile {
-  overallRisk: "Low" | "Medium" | "High";
+  overallRisk: "Low" | "Medium" | "High"; // MUST be exactly one of these three values, no other variations
   categories: {
     geopolitical: string;
     environmental: string;

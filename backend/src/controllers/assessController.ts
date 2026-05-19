@@ -17,6 +17,15 @@ export async function assessController(
     const supplier: SupplierInput = { name, country, industry };
     const riskProfile = await assessSupplierRisk(supplier);
 
+    // for unexpected values from the API
+    const normalizeRisk = (risk: string): "Low" | "Medium" | "High" => {
+      if (risk.toLowerCase().includes("high")) return "High";
+      if (risk.toLowerCase().includes("low")) return "Low";
+      return "Medium";
+    };
+
+    riskProfile.overallRisk = normalizeRisk(riskProfile.overallRisk);
+
     const assessment = new Assessment({ supplier, riskProfile });
     await assessment.save();
 
