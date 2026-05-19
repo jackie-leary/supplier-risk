@@ -1,3 +1,5 @@
+import styles from "./RiskProfile.module.css";
+
 interface Categories {
   geopolitical: string;
   environmental: string;
@@ -22,158 +24,46 @@ const riskConfig = {
   High: { color: "var(--risk-high)", label: "HIGH RISK" },
 };
 
-const categoryIcons: Record<string, string> = {
-  geopolitical: "GEOPOLITICAL",
-  environmental: "ENVIRONMENTAL",
-  labor: "LABOR",
-  regulatory: "REGULATORY",
+const categoryKeys: Record<string, string> = {
+  geopolitical: "GEO",
+  environmental: "ENV",
+  labor: "LAB",
+  regulatory: "REG",
 };
 
 function RiskProfile({ data }: Props) {
   const { color, label } = riskConfig[data.overallRisk];
 
   return (
-    <div style={{ marginTop: "48px", animation: "fadeIn 0.4s ease" }}>
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-
-      {/* Overall risk banner */}
-      <div
-        style={{
-          border: `1px solid ${color}`,
-          padding: "20px 24px",
-          marginBottom: "32px",
-          display: "flex",
-          alignItems: "center",
-          gap: "16px",
-        }}
-      >
-        <div
-          style={{
-            width: "10px",
-            height: "10px",
-            borderRadius: "50%",
-            background: color,
-            flexShrink: 0,
-          }}
-        />
-        <span
-          style={{
-            fontFamily: "IBM Plex Mono, monospace",
-            fontSize: "13px",
-            letterSpacing: "0.15em",
-            color,
-          }}
-        >
+    <div className={styles.container}>
+      <div className={styles.banner} style={{ borderColor: color }}>
+        <div className={styles.dot} style={{ background: color }} />
+        <span className={styles.riskLabel} style={{ color }}>
           {label}
         </span>
-        <span
-          style={{
-            color: "var(--text-muted)",
-            fontSize: "13px",
-            marginLeft: "auto",
-          }}
-        >
-          {data.summary}
-        </span>
+        <span className={styles.summary}>{data.summary}</span>
       </div>
 
-      {/* Categories */}
-      <div style={{ marginBottom: "32px" }}>
-        <p
-          style={{
-            fontFamily: "IBM Plex Mono, monospace",
-            fontSize: "11px",
-            letterSpacing: "0.1em",
-            color: "var(--text-muted)",
-            textTransform: "uppercase",
-            marginBottom: "16px",
-          }}
-        >
-          Risk Categories
-        </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
+      <div className={styles.section}>
+        <p className={styles.sectionLabel}>Risk Categories</p>
+        <div className={styles.rows}>
           {Object.entries(data.categories).map(([key, value]) => (
-            <div
-              key={key}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "80px 1fr",
-                gap: "32px",
-                background: "var(--surface)",
-                padding: "16px",
-                alignItems: "start",
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "IBM Plex Mono, monospace",
-                  fontSize: "11px",
-                  letterSpacing: "0.1em",
-                  color: "var(--accent)",
-                  paddingTop: "2px",
-                }}
-              >
-                {categoryIcons[key]}
-              </span>
-              <span
-                style={{
-                  fontSize: "13px",
-                  lineHeight: "1.6",
-                  color: "var(--text)",
-                }}
-              >
-                {value}
-              </span>
+            <div key={key} className={styles.row}>
+              <span className={styles.categoryKey}>{categoryKeys[key]}</span>
+              <span className={styles.categoryValue}>{value}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Red flags */}
       {data.redFlags.length > 0 && (
-        <div>
-          <p
-            style={{
-              fontFamily: "IBM Plex Mono, monospace",
-              fontSize: "11px",
-              letterSpacing: "0.1em",
-              color: "var(--text-muted)",
-              textTransform: "uppercase",
-              marginBottom: "16px",
-            }}
-          >
-            Red Flags
-          </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
+        <div className={styles.section}>
+          <p className={styles.sectionLabel}>Red Flags</p>
+          <div className={styles.rows}>
             {data.redFlags.map((flag, i) => (
-              <div
-                key={i}
-                style={{
-                  background: "var(--surface)",
-                  padding: "12px 16px",
-                  display: "flex",
-                  gap: "12px",
-                  alignItems: "start",
-                }}
-              >
-                <span
-                  style={{
-                    color: "var(--risk-high)",
-                    fontFamily: "IBM Plex Mono, monospace",
-                    fontSize: "11px",
-                    paddingTop: "2px",
-                  }}
-                >
-                  !
-                </span>
-                <span style={{ fontSize: "13px", lineHeight: "1.6" }}>
-                  {flag}
-                </span>
+              <div key={i} className={styles.flagRow}>
+                <span className={styles.flagIcon}>!</span>
+                <span className={styles.flagText}>{flag}</span>
               </div>
             ))}
           </div>

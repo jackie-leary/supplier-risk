@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Assessment {
   _id: string;
@@ -15,18 +15,35 @@ interface Assessment {
   createdAt: string;
 }
 
+interface HistoryResponse {
+  assessments: Assessment[];
+  total: number;
+  page: number;
+  totalPages: number;
+}
+
 export function useHistory() {
-  const [assessments, setAssessments] = useState<Assessment[]>([]);
+  const [data, setData] = useState<HistoryResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/history")
+    setIsLoading(true);
+    fetch(`http://localhost:3000/api/history?page=${page}&limit=5`)
       .then((res) => res.json())
-      .then((data) => setAssessments(data))
+      .then((json) => setData(json))
       .catch(() => setError("Failed to load history"))
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [page]);
 
-  return { assessments, isLoading, error };
+  return {
+    assessments: data?.assessments ?? [],
+    total: data?.total ?? 0,
+    totalPages: data?.totalPages ?? 1,
+    isLoading,
+    error,
+    page,
+    setPage,
+  };
 }

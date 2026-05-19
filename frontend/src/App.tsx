@@ -2,6 +2,7 @@ import { useState } from "react";
 import SupplierForm from "./components/SupplierForm";
 import RiskProfile from "./components/RiskProfile";
 import HistoryView from "./components/HistoryView";
+import LoadingBars from "./components/LoadingBars";
 
 interface RiskProfileData {
   overallRisk: "Low" | "Medium" | "High";
@@ -124,6 +125,7 @@ function App() {
               {error}
             </p>
           )}
+          {isLoading && <LoadingBars />}
           {riskProfile && <RiskProfile data={riskProfile} />}
         </>
       )}
