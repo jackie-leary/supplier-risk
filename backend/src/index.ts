@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import assessRouter from "./routes/assess";
+import historyRouter from "./routes/history";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +18,7 @@ mongoose
 app.use(cors());
 app.use(express.json());
 app.use("/api/assess", assessRouter);
+app.use("/api/history", historyRouter);
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });

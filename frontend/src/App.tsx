@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SupplierForm from "./components/SupplierForm";
 import RiskProfile from "./components/RiskProfile";
+import HistoryView from "./components/HistoryView";
 
 interface RiskProfileData {
   overallRisk: "Low" | "Medium" | "High";
@@ -18,6 +19,7 @@ function App() {
   const [riskProfile, setRiskProfile] = useState<RiskProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [tab, setTab] = useState<"assess" | "history">("assess");
 
   const handleSubmit = async (
     name: string,
@@ -45,6 +47,20 @@ function App() {
       setIsLoading(false);
     }
   };
+
+  const tabStyle = (active: boolean) => ({
+    fontFamily: "IBM Plex Mono, monospace",
+    fontSize: "11px",
+    letterSpacing: "0.1em",
+    textTransform: "uppercase" as const,
+    color: active ? "var(--accent)" : "var(--text-muted)",
+    background: "none",
+    border: "none",
+    borderBottom: active ? "1px solid var(--accent)" : "1px solid transparent",
+    padding: "8px 0",
+    cursor: "pointer",
+    marginRight: "24px",
+  });
 
   return (
     <div>
@@ -78,22 +94,41 @@ function App() {
         </h1>
       </header>
 
-      <SupplierForm onSubmit={handleSubmit} isLoading={isLoading} />
-
-      {error && (
-        <p
-          style={{
-            color: "var(--risk-high)",
-            fontFamily: "IBM Plex Mono, monospace",
-            fontSize: "13px",
-            marginTop: "24px",
-          }}
+      <nav style={{ marginBottom: "32px" }}>
+        <button
+          style={tabStyle(tab === "assess")}
+          onClick={() => setTab("assess")}
         >
-          {error}
-        </p>
+          New Assessment
+        </button>
+        <button
+          style={tabStyle(tab === "history")}
+          onClick={() => setTab("history")}
+        >
+          History
+        </button>
+      </nav>
+
+      {tab === "assess" && (
+        <>
+          <SupplierForm onSubmit={handleSubmit} isLoading={isLoading} />
+          {error && (
+            <p
+              style={{
+                color: "var(--risk-high)",
+                fontFamily: "IBM Plex Mono, monospace",
+                fontSize: "13px",
+                marginTop: "24px",
+              }}
+            >
+              {error}
+            </p>
+          )}
+          {riskProfile && <RiskProfile data={riskProfile} />}
+        </>
       )}
 
-      {riskProfile && <RiskProfile data={riskProfile} />}
+      {tab === "history" && <HistoryView />}
     </div>
   );
 }
