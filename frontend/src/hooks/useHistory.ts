@@ -30,7 +30,7 @@ export function useHistory() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`http://localhost:3000/api/history?page=${page}&limit=5`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/history?page=${page}&limit=5`)
       .then((res) => res.json())
       .then((json) => setData(json))
       .catch(() => setError("Failed to load history"))

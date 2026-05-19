@@ -32,11 +32,14 @@ function App() {
     setRiskProfile(null);
 
     try {
-      const response = await fetch("http://localhost:3000/api/assess", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, country, industry }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/assess`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, country, industry }),
+        }
+      );
 
       if (!response.ok) throw new Error("Assessment failed");
 
