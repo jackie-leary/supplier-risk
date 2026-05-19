@@ -15,7 +15,11 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://supplier-risk-zeta.vercel.app"],
+  })
+);
 app.use(express.json());
 app.use("/api/assess", assessRouter);
 app.use("/api/history", historyRouter);
