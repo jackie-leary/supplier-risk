@@ -25,3 +25,7 @@ jobs:
       - name: Type check
         run: npx tsc --noEmit
         working-directory: ./backend
+
+      - name: Run tests
+        run: npm test
+        working-directory: ./backend
