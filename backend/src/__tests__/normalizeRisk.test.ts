@@ -1,3 +1,7 @@
+jest.mock("../services/claudeService", () => ({
+  assessSupplierRisk: jest.fn(),
+}));
+
 import { normalizeRisk } from "../controllers/assessController";
 
 describe("normalizeRisk", () => {
