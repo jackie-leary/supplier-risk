@@ -2,6 +2,13 @@ import { Request, Response } from "express";
 import { assessSupplierRisk, SupplierInput } from "../services/claudeService";
 import Assessment from "../models/Assessment";
 
+// for unexpected values from the API
+export const normalizeRisk = (risk: string): "Low" | "Medium" | "High" => {
+  if (risk.toLowerCase().includes("high")) return "High";
+  if (risk.toLowerCase().includes("low")) return "Low";
+  return "Medium";
+};
+
 export async function assessController(
   req: Request,
   res: Response
@@ -16,13 +23,6 @@ export async function assessController(
   try {
     const supplier: SupplierInput = { name, country, industry };
     const riskProfile = await assessSupplierRisk(supplier);
-
-    // for unexpected values from the API
-    const normalizeRisk = (risk: string): "Low" | "Medium" | "High" => {
-      if (risk.toLowerCase().includes("high")) return "High";
-      if (risk.toLowerCase().includes("low")) return "Low";
-      return "Medium";
-    };
 
     riskProfile.overallRisk = normalizeRisk(riskProfile.overallRisk);
 
