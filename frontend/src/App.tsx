@@ -46,7 +46,7 @@ function App() {
       const data = await response.json();
       setRiskProfile(data);
     } catch (err) {
-      setError("Something went wrong. Please try again.");
+      setError(`Something went wrong. Please try again. ${err} `);
     } finally {
       setIsLoading(false);
     }
